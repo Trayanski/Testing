@@ -1,0 +1,184 @@
+package com.company;
+
+import java.util.ArrayList;
+import java.util.Scanner;
+
+public class Testing1 {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        String name = scanner.nextLine();
+        greet(name);
+    }
+
+    public static void greet(String name) {
+        if (name == null) {
+            System.out.println("Hello, my friend.");
+        } else if (!(name.contains(" ")) && isAllUpper(name)) {
+            System.out.println("HELLO " + name);
+        } else if(name.contains(" ")) {
+            if (name.contains("\"")){
+                ArrayList<StringBuilder> listOfNames = new ArrayList<StringBuilder>();
+                String betweenBorders = name.toString().substring(name.indexOf('"') + 1, name.indexOf('"', name.indexOf('"') + 1));
+
+                char[] charName = name.toCharArray();
+                int nameNum = 0;
+                boolean isInBorders = false;
+                for (char ch : charName){
+                    if(ch != ' '){
+                        if (ch == '"'){
+                            if (isInBorders){
+                                isInBorders=false;
+                            }else{
+                                isInBorders =true;
+                            }
+                            continue;
+                        }
+
+                        if (!isInBorders){
+                            try {
+                                listOfNames.get(nameNum).append(ch);
+                            } catch ( IndexOutOfBoundsException e ) {
+                                listOfNames.add(nameNum, new StringBuilder().append(ch));
+                            }
+                        }
+                    }else{
+                        nameNum++;
+                    }
+                }
+
+                boolean hasAUpperCaseWord = false;
+                for (StringBuilder currentName : listOfNames){
+                    if (isAllUpper(currentName.toString())){
+                        hasAUpperCaseWord = true;
+                    }
+                }
+
+                if (hasAUpperCaseWord){ //TODO
+                    StringBuilder names = new StringBuilder();
+                    ArrayList<String> upperCaseWords = new ArrayList<>();
+                    for (StringBuilder currentName : listOfNames){
+                        if (isAllUpper(currentName.toString())){
+                            upperCaseWords.add(currentName.toString());
+                        } else{
+                            if(currentName.equals(listOfNames.get(listOfNames.size() - 1))){
+                                names.append(" and " + currentName.toString());
+                            } else if(currentName.equals(listOfNames.get(0))){
+                                names.append(currentName.toString());
+                            } else {
+                                names.append(", " + currentName.toString());
+                            }
+                        }
+                    }
+
+                    if (upperCaseWords.size() == 1){
+                        names.append(". AND HELLO ");
+                        names.append(upperCaseWords.get(0));
+                    }else if (upperCaseWords.size() == 2) {
+                        names.append(". AND HELLO " + upperCaseWords.get(0) + " AND " + upperCaseWords.get(1) + "!\n");
+                    }else if(upperCaseWords.size() > 2){
+                        for (int i = 0; i < upperCaseWords.size() - 1; i++) {
+                            names.append(upperCaseWords.get(i).toString() + ", ");
+                        }
+
+                        names.append(upperCaseWords.get(upperCaseWords.size() - 2).toString() + " AND " + upperCaseWords.get(upperCaseWords.size() - 1) + "!");
+                    }
+
+                    System.out.println("Hello, " + names);
+                }else{
+                    StringBuilder names = new StringBuilder();
+                    if (listOfNames.size() == 1) {
+                        System.out.printf("Hello, %s and %s.\n", listOfNames.get(0), betweenBorders);
+
+                    } else if (listOfNames.size() == 2) {
+                        System.out.printf("Hello, %s, %s and %s.\n", listOfNames.get(0), listOfNames.get(1), betweenBorders);
+                    } else if(listOfNames.size() > 2){
+                        for (int i = 0; i < listOfNames.size() - 1; i++) {
+                            names.append(listOfNames.get(i).toString() + ", ");
+                        }
+
+                        System.out.println("Hello, " + names.toString() + " and " + betweenBorders);
+                    }
+                }
+            } else{
+                ArrayList<StringBuilder> listOfNames = new ArrayList<StringBuilder>();
+                char[] charName = name.toCharArray();
+                int nameNum = 0;
+                for (char ch : charName){
+                    if(ch != ' '){
+                        try {
+                            listOfNames.get(nameNum).append(ch);
+                        } catch ( IndexOutOfBoundsException e ) {
+                            listOfNames.add(nameNum, new StringBuilder().append(ch));
+                        }
+                    }else{
+                        nameNum++;
+                    }
+                }
+
+                boolean hasAUpperCaseWord = false;
+                for (StringBuilder currentName : listOfNames){
+                    if (isAllUpper(currentName.toString())){
+                        hasAUpperCaseWord = true;
+                    }
+                }
+
+                if (hasAUpperCaseWord){
+                    StringBuilder names = new StringBuilder();
+                    ArrayList<String> upperCaseWords = new ArrayList<>();
+                    for (StringBuilder currentName : listOfNames){
+                        if (isAllUpper(currentName.toString())){
+                            upperCaseWords.add(currentName.toString());
+                        } else{
+                            if(currentName.equals(listOfNames.get(listOfNames.size() - 1))){
+                                names.append(" and " + currentName.toString());
+                            } else if(currentName.equals(listOfNames.get(0))){
+                                names.append(currentName.toString());
+                            } else {
+                                names.append(", " + currentName.toString());
+                            }
+                        }
+                    }
+
+                    if (upperCaseWords.size() == 1){
+                        names.append(". AND HELLO ");
+                        names.append(upperCaseWords.get(0));
+                    }else if (upperCaseWords.size() == 2) {
+                        names.append(". AND HELLO " + upperCaseWords.get(0) + " AND " + upperCaseWords.get(1) + "!\n");
+                    }else if(upperCaseWords.size() > 2){
+                        for (int i = 0; i < upperCaseWords.size() - 1; i++) {
+                            names.append(upperCaseWords.get(i).toString() + ", ");
+                        }
+
+                        names.append(upperCaseWords.get(upperCaseWords.size() - 2).toString() + " AND " + upperCaseWords.get(upperCaseWords.size() - 1) + "!");
+                    }
+
+                    System.out.println("Hello, " + names);
+                }else{
+                    StringBuilder names = new StringBuilder();
+                    if (listOfNames.size() == 2) {
+                        System.out.printf("Hello, %s and %s.\n", listOfNames.get(0), listOfNames.get(1));
+
+                    }else if(listOfNames.size() > 2){
+                        for (int i = 0; i < listOfNames.size() - 2; i++) {
+                            names.append(listOfNames.get(i).toString() + ", ");
+                        }
+
+                        names.append(listOfNames.get(listOfNames.size() - 2).toString() + " and " + listOfNames.get(listOfNames.size() - 1) + ".");
+                        System.out.println("Hello, " + names.toString());
+                    }
+                }
+            }
+        } else{
+            System.out.printf("Hello, %s.\n", name);
+        }
+    }
+
+    private static boolean isAllUpper(String s) {
+        for(char c : s.toCharArray()) {
+            if(Character.isLetter(c) && Character.isLowerCase(c)) {
+                return false;
+            }
+        }
+        return true;
+    }
+}
