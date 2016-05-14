@@ -1,0 +1,171 @@
+package com.company;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+        import java.math.BigInteger;
+        import java.util.Scanner;
+
+public class OIJSumator {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+
+        SumatorTest sumatorTest = new SumatorTest();
+
+        sumatorTest.IntSumator_CorrectInput_CompleteSum();
+        sumatorTest.IntSumator_NegativeInput_CompleteSum();
+        sumatorTest.IntSumator_ZeroInput_CompleteSum();
+
+        sumatorTest.DoubleSumator_CorrectInput_CompleteSum();
+        sumatorTest.DoubleSumator_NegativeInput_CompleteSum();
+        sumatorTest.DoubleSumator_ZeroInput_CompleteSum();
+
+        sumatorTest.StringSumator_CorrectInput_CompleteSum();
+        sumatorTest.StringSumator_NegativeInput_CompleteSum();
+        sumatorTest.StringSumator_ZeroInput_CompleteSum();
+
+        sumatorTest.BISumator_CorrectInput_CompleteSum();
+        sumatorTest.BISumator_NegativeInput_CompleteSum();
+        sumatorTest.BISumator_ZeroInput_CompleteSum();
+
+        sumatorTest.BDSumator_CorrectInput_CompleteSum();
+        sumatorTest.BDSumator_NegativeInput_CompleteSum();
+        sumatorTest.BDSumator_ZeroInput_CompleteSum();
+    }
+}
+
+class Sumator {
+
+    public Sumator() {
+
+    }
+
+    public static int IntSumator(Integer num1, Integer num2) {
+        int sum = 0;
+        return sum = num1 + num2;
+    }
+
+    public static double DoubleSumator(Double num1, Double num2) {
+        double sum = 0;
+        return sum = num1 + num2;
+    }
+
+    public static int StringSumator(String num1, String num2) {//can be double, BI, BD and so on..
+        int sum = 0;
+        int firstInt = Integer.parseInt(num1);
+        int secondInt = Integer.parseInt(num2);
+        return sum = firstInt + secondInt;
+    }
+
+    public static BigInteger BISumator (long num1, long num2) {
+        BigInteger sum1 = BigInteger.valueOf(num1);
+        BigInteger sum2 = BigInteger.valueOf(num2);
+        BigInteger sum = BigInteger.valueOf(0);
+        sum = sum1.add(sum2);
+        return sum;
+    }
+
+    public static BigDecimal BDSumator (double num1, double num2) {
+        BigDecimal sum = new BigDecimal(0);
+        sum = sum.add(new BigDecimal(num1));
+        sum = sum.add(new BigDecimal(num2));
+        return sum;
+    }
+}
+
+class SumatorTest {
+    @Test//(expected = RuntimeException.class)
+    public final void IntSumator_CorrectInput_CompleteSum() {
+        int sum = Sumator.IntSumator(2, 3);
+        Assert.assertEquals("The output is not 5!", 5, sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void IntSumator_ZeroInput_CompleteSum() {
+        int sum = Sumator.IntSumator(0, 0);
+        Assert.assertEquals("The output is not zero!", 0, sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void IntSumator_NegativeInput_CompleteSum() {
+        int sum = Sumator.IntSumator(-1, -2);
+        Assert.assertEquals("The output is not -3!", -3, sum);
+    }
+
+
+    @Test//(expected = RuntimeException.class)
+    public final void DoubleSumator_CorrectInput_CompleteSum() {
+        Double sum = Sumator.DoubleSumator(2.2, 3.3);
+        Assert.assertEquals("The output is not 5.5!", 5.5, sum, 1e-15); // double delta???
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void DoubleSumator_ZeroInput_CompleteSum() {
+        double sum = Sumator.DoubleSumator(0.0, 0.0);
+        Assert.assertEquals("The output is not 0.0!", 0.0, sum, 1e-15); // double delta???
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void DoubleSumator_NegativeInput_CompleteSum() {
+        double sum = Sumator.DoubleSumator(-1.1, -2.2);
+        Assert.assertEquals("The output is not-3.3!", -3.3, sum, 1e-15); // double delta???
+    }
+
+
+    @Test//(expected = RuntimeException.class)
+    public final void StringSumator_CorrectInput_CompleteSum() {
+        int sum = Sumator.StringSumator("2", "3");
+        Assert.assertEquals("The output is not 5!", 5, sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void StringSumator_ZeroInput_CompleteSum() {
+        int sum = Sumator.StringSumator("0", "0");
+        Assert.assertEquals("The output is not zero!", 0, sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void StringSumator_NegativeInput_CompleteSum() {
+        int sum = Sumator.StringSumator("-1", "-2");
+        Assert.assertEquals("The output is not -3!", -3, sum);
+    }
+
+
+    @Test//(expected = RuntimeException.class)
+    public final void BISumator_CorrectInput_CompleteSum() {
+        BigInteger sum = Sumator.BISumator(22, 33);
+        Assert.assertEquals("The output is not 55!", BigInteger.valueOf(55), sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void BISumator_ZeroInput_CompleteSum() {
+        BigInteger sum = Sumator.BISumator(0, 0);
+        Assert.assertEquals("The output is not zero!", BigInteger.valueOf(0), sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void BISumator_NegativeInput_CompleteSum() {
+        BigInteger sum = Sumator.BISumator(-11, -22);
+        Assert.assertEquals("The output is not -33!", BigInteger.valueOf(-33), sum);
+    }
+
+
+    @Test//(expected = RuntimeException.class)
+    public final void BDSumator_CorrectInput_CompleteSum() {
+        BigDecimal sum = Sumator.BDSumator(22.2, 33.2);
+        //Assert.assertEquals("The output is not 55.5!", new BigDecimal(55.5), sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void BDSumator_ZeroInput_CompleteSum() {
+        BigDecimal sum = Sumator.BDSumator(0, 0);
+        //Assert.assertEquals("The output is not zero!", new BigDecimal(0), sum);
+    }
+
+    @Test//(expected = RuntimeException.class)
+    public final void BDSumator_NegativeInput_CompleteSum() {
+        BigDecimal sum = Sumator.BDSumator(-11.1, -22.2);
+        //Assert.assertEquals("The output is not -33.3!", new BigDecimal(-33.3), sum);
+    }
+}
