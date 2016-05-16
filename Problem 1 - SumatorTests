@@ -3,6 +3,7 @@ package com.company;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.math.BigDecimal;
         import java.math.BigInteger;
         import java.util.Scanner;
@@ -58,19 +59,31 @@ class Sumator {
         return sum = firstInt + secondInt;
     }
 
-    public static BigInteger BISumator (long num1, long num2) {
-        BigInteger sum1 = BigInteger.valueOf(num1);
-        BigInteger sum2 = BigInteger.valueOf(num2);
-        BigInteger sum = BigInteger.valueOf(0);
-        sum = sum1.add(sum2);
+    public static BigInteger BISumator (BigInteger num1, BigInteger num2) {
+        BigInteger sum;
+        sum = num1.add(num2);
         return sum;
     }
 
-    public static BigDecimal BDSumator (double num1, double num2) {
+    public static BigDecimal BDSumator (BigDecimal num1, BigDecimal num2) {
         BigDecimal sum = new BigDecimal(0);
-        sum = sum.add(new BigDecimal(num1));
-        sum = sum.add(new BigDecimal(num2));
+        sum = sum.add(num1);
+        sum = sum.add(num2);
         return sum;
+    }
+
+    boolean isNumber(Object object){
+        char[] chars = object.toString().toCharArray();
+        boolean isANumber = false;
+        for (char ch : chars){
+            if (Character.isDigit(ch)){
+                continue;
+            } else{
+                isANumber = false;
+            }
+        }
+
+        return isANumber;
     }
 }
 
@@ -134,38 +147,107 @@ class SumatorTest {
 
     @Test//(expected = RuntimeException.class)
     public final void BISumator_CorrectInput_CompleteSum() {
-        BigInteger sum = Sumator.BISumator(22, 33);
+        BigInteger sum = Sumator.BISumator(BigInteger.valueOf(22), BigInteger.valueOf(33));
         Assert.assertEquals("The output is not 55!", BigInteger.valueOf(55), sum);
     }
 
     @Test//(expected = RuntimeException.class)
     public final void BISumator_ZeroInput_CompleteSum() {
-        BigInteger sum = Sumator.BISumator(0, 0);
+        BigInteger sum = Sumator.BISumator(BigInteger.valueOf(0), BigInteger.valueOf(0));
         Assert.assertEquals("The output is not zero!", BigInteger.valueOf(0), sum);
     }
 
     @Test//(expected = RuntimeException.class)
     public final void BISumator_NegativeInput_CompleteSum() {
-        BigInteger sum = Sumator.BISumator(-11, -22);
+        BigInteger sum = Sumator.BISumator(BigInteger.valueOf(-11), BigInteger.valueOf(-22));
         Assert.assertEquals("The output is not -33!", BigInteger.valueOf(-33), sum);
     }
 
 
+    //Complete the Test methods for BigDecimal and sucsessfully run them;
+
     @Test//(expected = RuntimeException.class)
     public final void BDSumator_CorrectInput_CompleteSum() {
-        BigDecimal sum = Sumator.BDSumator(22.2, 33.2);
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(22.2), BigDecimal.valueOf(33.3));
         //Assert.assertEquals("The output is not 55.5!", new BigDecimal(55.5), sum);
     }
 
     @Test//(expected = RuntimeException.class)
     public final void BDSumator_ZeroInput_CompleteSum() {
-        BigDecimal sum = Sumator.BDSumator(0, 0);
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(0), BigDecimal.valueOf(0));
         //Assert.assertEquals("The output is not zero!", new BigDecimal(0), sum);
     }
 
     @Test//(expected = RuntimeException.class)
     public final void BDSumator_NegativeInput_CompleteSum() {
-        BigDecimal sum = Sumator.BDSumator(-11.1, -22.2);
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(-11.1), BigDecimal.valueOf(-22.2));
         //Assert.assertEquals("The output is not -33.3!", new BigDecimal(-33.3), sum);
+    }
+
+
+    @Test(expected = NumberFormatException.class)
+    public final void IntSumator_NotAIntInput_Throw() {
+        int firstNum = 3;
+        int secondNum = (char)3;
+        int sum = Sumator.IntSumator(firstNum, secondNum);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public final void DoubleSumator_NotAIntInput_Throw() {
+        double firstNum = 3.2;
+        double secondNum = (char)3;
+        double sum = Sumator.DoubleSumator(firstNum, secondNum);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public final void StringSumator_NotANumberInput_Throw() {
+        String firstNum = "Not a number";
+        String secondNum = "3.3";
+        int sum = Sumator.StringSumator(firstNum, secondNum);
+    }
+
+    @Test(expected = IOException.class)
+    public final void BISumator_NotAIntInput_Throw() {
+        int firstNum = 22222222;
+        int secondNum = (char)32222222;
+        BigInteger sum = Sumator.BISumator(BigInteger.valueOf(firstNum), BigInteger.valueOf(secondNum));
+    }
+
+    @Test(expected = IOException.class)
+    public final void BDSumator_NotAIntInput_Throw() {
+        int firstNum = 22222222;
+        int secondNum = (char)32222222;
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(firstNum), BigDecimal.valueOf(secondNum));
+    }
+
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void IntSumator_NullInput_Throw() {
+        int firstNum = 3;
+        int sum = Sumator.IntSumator(firstNum, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void DoubleSumator_NullInput_Throw() {
+        double firstNum = 3.2;
+        double sum = Sumator.DoubleSumator(firstNum, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void StringSumator_NullInput_Throw() {
+        String firstNum = "1";
+        int sum = Sumator.StringSumator(firstNum, null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void BISumator_NullInput_Throw() {
+        int firstNum = 22222222;
+        BigInteger sum = Sumator.BISumator(BigInteger.valueOf(firstNum), null);
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public final void BDSumator_NullInput_Throw() {
+        int firstNum = 22222222;
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(firstNum), null);
     }
 }
