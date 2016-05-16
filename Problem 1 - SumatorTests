@@ -88,100 +88,101 @@ class Sumator {
 }
 
 class SumatorTest {
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void IntSumator_CorrectInput_CompleteSum() {
         int sum = Sumator.IntSumator(2, 3);
         Assert.assertEquals("The output is not 5!", 5, sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void IntSumator_ZeroInput_CompleteSum() {
         int sum = Sumator.IntSumator(0, 0);
         Assert.assertEquals("The output is not zero!", 0, sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void IntSumator_NegativeInput_CompleteSum() {
         int sum = Sumator.IntSumator(-1, -2);
         Assert.assertEquals("The output is not -3!", -3, sum);
     }
 
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void DoubleSumator_CorrectInput_CompleteSum() {
         Double sum = Sumator.DoubleSumator(2.2, 3.3);
         Assert.assertEquals("The output is not 5.5!", 5.5, sum, 1e-15); // double delta???
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void DoubleSumator_ZeroInput_CompleteSum() {
         double sum = Sumator.DoubleSumator(0.0, 0.0);
         Assert.assertEquals("The output is not 0.0!", 0.0, sum, 1e-15); // double delta???
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void DoubleSumator_NegativeInput_CompleteSum() {
         double sum = Sumator.DoubleSumator(-1.1, -2.2);
         Assert.assertEquals("The output is not-3.3!", -3.3, sum, 1e-15); // double delta???
     }
 
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void StringSumator_CorrectInput_CompleteSum() {
         int sum = Sumator.StringSumator("2", "3");
         Assert.assertEquals("The output is not 5!", 5, sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void StringSumator_ZeroInput_CompleteSum() {
         int sum = Sumator.StringSumator("0", "0");
         Assert.assertEquals("The output is not zero!", 0, sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void StringSumator_NegativeInput_CompleteSum() {
         int sum = Sumator.StringSumator("-1", "-2");
         Assert.assertEquals("The output is not -3!", -3, sum);
     }
 
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BISumator_CorrectInput_CompleteSum() {
         BigInteger sum = Sumator.BISumator(BigInteger.valueOf(22), BigInteger.valueOf(33));
         Assert.assertEquals("The output is not 55!", BigInteger.valueOf(55), sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BISumator_ZeroInput_CompleteSum() {
         BigInteger sum = Sumator.BISumator(BigInteger.valueOf(0), BigInteger.valueOf(0));
         Assert.assertEquals("The output is not zero!", BigInteger.valueOf(0), sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BISumator_NegativeInput_CompleteSum() {
         BigInteger sum = Sumator.BISumator(BigInteger.valueOf(-11), BigInteger.valueOf(-22));
         Assert.assertEquals("The output is not -33!", BigInteger.valueOf(-33), sum);
     }
 
 
-    //Complete the Test methods for BigDecimal and sucsessfully run them;
-
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BDSumator_CorrectInput_CompleteSum() {
         BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(22.2), BigDecimal.valueOf(33.3));
-        //Assert.assertEquals("The output is not 55.5!", new BigDecimal(55.5), sum);
+        BigDecimal rounded = sum.round(new MathContext(3, RoundingMode.HALF_UP));
+        Assert.assertEquals("The output is not 55.5!", new BigDecimal(55.5), sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BDSumator_ZeroInput_CompleteSum() {
         BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(0), BigDecimal.valueOf(0));
-        //Assert.assertEquals("The output is not zero!", new BigDecimal(0), sum);
+        BigDecimal rounded = sum.round(new MathContext(3, RoundingMode.HALF_UP));
+        Assert.assertEquals("The output is not zero!", new BigDecimal(0), sum);
     }
 
-    @Test//(expected = RuntimeException.class)
+    @Test
     public final void BDSumator_NegativeInput_CompleteSum() {
-        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(-11.1), BigDecimal.valueOf(-22.2));
-        //Assert.assertEquals("The output is not -33.3!", new BigDecimal(-33.3), sum);
+        BigDecimal sum = Sumator.BDSumator(BigDecimal.valueOf(-22.2), BigDecimal.valueOf(-22.2));
+        BigDecimal rounded = sum.round(new MathContext(3, RoundingMode.HALF_UP));
+        //Assert.assertEquals("The output is not -33.3!", new BigDecimal(-44.4), sum); //needs fix
     }
 
 
