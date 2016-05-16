@@ -1,0 +1,134 @@
+package com.company;
+
+import org.junit.Assert;
+import org.junit.Test;
+
+import java.util.Scanner;
+
+public class Problem7 {
+    public static void main(String[] args) {
+
+        //Tests:
+        TestClass test = new TestClass();
+        test.NOD_CorrectInput_CompleteSum();
+        test.NOD_NegativeInput_CompleteSum();
+        test.NOD_IncorrectInput_Throw();
+        test.NOD_ZeroInput_CompleteSum();
+        test.NOK_CorrectInput_CompleteSum();
+        test.NOK_NegativeInput_CompleteSum();
+        test.NOK_IncorrectInput_Throw();
+        test.NOK_ZeroInput_CompleteSum();
+
+        Scanner scanner = new Scanner(System.in);
+        long x = scanner.nextInt();
+        scanner.nextLine();
+        long y = scanner.nextInt();
+        scanner.nextLine();
+        long nok = 0;
+
+        FunctionsNOKAndNOD func = new FunctionsNOKAndNOD();
+
+        try {
+            while (x != y) {
+                if (x > y) {
+                    x += x - y;
+                    if (x == 0 || y == 0) {
+                        throw new NullPointerException("There can't be a zero value!");
+                    }
+
+                    nok = func.NOK(x, y);
+                    System.out.printf("x: %d, y: %d, nok: %d\n", x, y, nok);
+                } else {
+                    y += y - x;
+                    if (x == 0 || y == 0) {
+                        throw new NullPointerException("There can't be a zero value!");
+                    }
+
+                    nok = func.NOK(y, x);
+                    System.out.printf("x: %d, y: %d, nok: %d\n", x, y, nok);
+                }
+
+                x = scanner.nextInt();
+                scanner.nextLine();
+                y = scanner.nextInt();
+                scanner.nextLine();
+            }
+        }catch (NullPointerException ex){
+            System.out.println(ex.getMessage());
+        }
+
+        System.out.println("The numbers are equal == " + x);
+    }
+}
+
+class FunctionsNOKAndNOD{
+    static boolean nullValueException = false;
+
+    public FunctionsNOKAndNOD(){
+    }
+
+    public static long NOK(long a, long b) {
+        return a * (b / NOD(a, b));
+    }
+
+    public static long NOD(long a, long b) {
+        while (b > 0) {
+            long temp = b;
+            b = a % b;
+            a = temp;
+        }
+
+        return a;
+    }
+}
+
+class TestClass{
+    FunctionsNOKAndNOD func = new FunctionsNOKAndNOD();
+
+    public TestClass(){
+    }
+
+    @Test
+    public final void NOD_CorrectInput_CompleteSum() {
+        long nod = func.NOD(2, 4);
+        Assert.assertEquals("The output is not 2!", 2, nod);
+    }
+
+    @Test
+    public final void NOD_NegativeInput_CompleteSum() {
+        long nod = func.NOD(2, -4);
+        Assert.assertEquals("The output is not 2!", 2, nod);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public final void NOD_ZeroInput_CompleteSum() {
+        long nod = func.NOD(2, 0);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public final void NOD_IncorrectInput_Throw() {
+        long nod = func.NOD(2, (char)4);
+    }
+
+
+    public final void NOK_CorrectInput_CompleteSum() {
+        long nok = func.NOK(2, 4);
+        Assert.assertEquals("The output is not 4!", 4, nok);
+    }
+
+    @Test
+    public final void NOK_NegativeInput_CompleteSum() {
+        long nok = func.NOK(2, -4);
+        Assert.assertEquals("The output is not -4", -4, nok);
+    }
+
+    @Test(expected = NullPointerException.class)
+    public final void NOK_ZeroInput_CompleteSum() {
+        long nok = func.NOK(2, 0);
+    }
+
+    @Test(expected = NumberFormatException.class)
+    public final void NOK_IncorrectInput_Throw() {
+        long nok = func.NOK(2, (char)4);
+    }
+}
