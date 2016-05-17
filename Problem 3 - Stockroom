@@ -1,0 +1,295 @@
+package com.company;
+
+import org.junit.Assert;
+import org.junit.Test;
+import java.util.*;
+
+public class Stockroom {
+    public static void main(String[] args) {
+
+        Product stockroom = new Product();
+        //create 3 products
+        stockroom.createProduct("musaka", 3, 10, 2.5);
+        stockroom.createProduct("ananas", 5, 5, 1);
+        stockroom.createProduct("midi", 2, 5, 1);
+        stockroom.createProduct("riba", 2, 5, 1);
+        stockroom.createProduct("bob", 7, 10, 3);
+        stockroom.createProduct("bob", 7, 10, 3);
+        //add 3
+        stockroom.addToProduct("musaka", 3);
+        stockroom.addToProduct("ananas", 3);
+        stockroom.addToProduct("bob", 3);
+        //sell 6
+        stockroom.sellFromProduct("musaka", 6);
+        stockroom.sellFromProduct("ananas", 6);
+        stockroom.sellFromProduct("bob", 6);
+
+        Tests test = new Tests();
+        //test.Product_CompleteCreation();
+        test.TestCreateProduct_CorrectInput_CompleteCreation();
+        test.TestCreateProduct_CountEqualToMaxCountInput_CompleteCreation();
+        test.TestCreateProduct_CountAndMaxCountZeroInput_CompleteCreation();
+        test.TestCreateProduct_CountBiggerThanMaxCountInput_Throw();
+        test.TestAddToProduct_CorrectInput_CompleteCreation();
+        test.TestAddToProduct_CountEqualToMaxCountInput_CompleteCreation();
+        test.TestAddToProduct_AddZeroInput_CompleteCreation();
+        test.TestAddToProduct_CountBiggerThanMaxCountInput_CompleteCreation();
+        test.TestSellFromProduct_CorrectInput_CompleteCreation();
+        test.TestSellFromProduct_CountEqualToZeroInput_CompleteCreation();
+        test.TestSellFromProduct_ZeroInput_CompleteCreation();
+        test.TestSellFromProduct_SellMoreThanCountInput_CompleteCreation();
+        test.TestSortAndPrint_CorrectInput_CompleteCreation();
+    }
+}
+
+class Product {
+
+    TreeMap<String, ArrayList<Double>> data = new TreeMap<>();
+
+    public Product() {
+    }
+
+    public void createProduct(String name, double count, double maxCount, double price) {
+        boolean exThrown = false;
+
+        try {
+            if (data.containsKey(name)) {
+                throw new InputMismatchException("With this method you can only create new products.");
+            }
+            if (count>maxCount){
+                throw new CountBiggerThanMaxCount("Count can't be bigger than maxCount!");
+            }
+        } catch (InputMismatchException ex) {
+            System.out.println(ex.getMessage());
+            exThrown = true;
+        } catch (CountBiggerThanMaxCount ex){
+            System.out.println(ex.getMessage());
+            exThrown = true;
+        }
+
+        if (!exThrown) {
+            data.put(name, new ArrayList<>());
+            data.get(name).add(0, count);
+            data.get(name).add(1, maxCount);
+            data.get(name).add(2, price);
+        }
+    }
+
+    public void addToProduct(String name, double addProductsCount) {
+        double countAfterAdding = data.get(name).get(0) + addProductsCount;
+        double productsLeftOut = 0;
+
+        if (countAfterAdding <= data.get(name).get(1)) {
+
+            data.get(name).set(0, countAfterAdding);
+
+        } else if (countAfterAdding > data.get(name).get(1)) {
+
+            productsLeftOut = countAfterAdding - data.get(name).get(1);
+            countAfterAdding = data.get(name).get(1);
+            data.get(name).set(0, countAfterAdding);
+            System.out.printf("There is no space for %.0f products.\n", productsLeftOut);
+
+        }
+    }
+
+    public void sellFromProduct(String name, double sellProductsCount) {
+        double couldntSellProducts = 0;
+
+        if (sellProductsCount > data.get(name).get(0)) {
+            couldntSellProducts = sellProductsCount - data.get(name).get(0);
+            data.get(name).set(0, 0.0);
+            System.out.printf("There are %.0f products that we couldn't sell.\n", couldntSellProducts);
+        } else if (sellProductsCount <= data.get(name).get(0)) {
+            data.get(name).set(0, data.get(name).get(0) - sellProductsCount);
+        }
+
+    }
+
+    public void sortAndPrint() {
+        //There can be two values with the same price
+        ArrayList<Double> prices = new ArrayList<>();
+        ArrayList<String> alreadyPrintedProducts = new ArrayList<>();
+
+        for (String name : data.keySet()) {
+            prices.add(data.get(name).get(2));
+        }
+
+        Collections.sort(prices);
+        System.out.println("Sorted elements:");
+
+        for (int i = 0; i < prices.size(); i++) {
+            for (String name : data.keySet()) {
+                if (data.get(name).get(2) == prices.get(i) && !(alreadyPrintedProducts.contains(name))) {
+                    System.out.printf("Product name: %s, Count: %.0f, MaxCount: %.0f, Price: %.2f.\n", name, data.get(name).get(0), data.get(name).get(1), data.get(name).get(2));
+                    alreadyPrintedProducts.add(name);
+                }
+            }
+        }
+    }
+
+    public static class CountBiggerThanMaxCount extends Exception {
+        public CountBiggerThanMaxCount () {}
+        public CountBiggerThanMaxCount (String message) {
+            super (message);
+        }
+    }
+}
+
+class Tests extends Product {
+
+/*
+TEST:
+createProduct
+addToProduct
+sellFromProduct
+sortAndPrint
+ */
+
+    //public final void Product_CompleteCreation() {
+    //    Product stockroomTest = new Product();
+    //    Assert.assertSame("The creation wasn't complete!", new Product(), stockroomTest);
+    //}
+
+    @Test
+    public final void TestCreateProduct_CorrectInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test
+    public final void TestCreateProduct_CountEqualToMaxCountInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 10, 10, 2.5);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test
+    public final void TestCreateProduct_CountAndMaxCountZeroInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 0, 0, 2.5);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test(expected = CountBiggerThanMaxCount.class)
+    public final void TestCreateProduct_CountBiggerThanMaxCountInput_Throw() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 5, 3, 2.5);
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestAddToProduct_CorrectInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.addToProduct("musaka", 3);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "6.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestAddToProduct_CountEqualToMaxCountInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.addToProduct("musaka", 7);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestAddToProduct_AddZeroInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.addToProduct("musaka", 0);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test (expected = CountBiggerThanMaxCount.class)
+    public final void TestAddToProduct_CountBiggerThanMaxCountInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.addToProduct("musaka", 8);
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestSellFromProduct_CorrectInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.sellFromProduct("musaka", 2);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "1.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestSellFromProduct_CountEqualToZeroInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.sellFromProduct("musaka", 3);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestSellFromProduct_ZeroInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.sellFromProduct("musaka", 0);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestSellFromProduct_SellMoreThanCountInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.sellFromProduct("musaka", 4);
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+    }
+
+    @Test//(expected = CountBiggerThanMaxCount.class)
+    public final void TestSortAndPrint_CorrectInput_CompleteCreation() {
+        Product stockroomTest = new Product();
+        stockroomTest.createProduct("musaka", 3, 10, 2.5);
+        stockroomTest.createProduct("banan", 3, 10, 0.75);
+        stockroomTest.createProduct("portokal", 3, 10, 0.40);
+        stockroomTest.sortAndPrint();
+
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("musaka"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("musaka").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("musaka").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "2.5", stockroomTest.data.get("musaka").get(2).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("banan"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("banan").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("banan").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.75", stockroomTest.data.get("banan").get(2).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", true, stockroomTest.data.containsKey("portokal"));
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "3.0", stockroomTest.data.get("portokal").get(0).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "10.0", stockroomTest.data.get("portokal").get(1).toString());
+        Assert.assertEquals("There is a problem in the creation of a ordinary product!", "0.4", stockroomTest.data.get("portokal").get(2).toString());
+    }
+}
